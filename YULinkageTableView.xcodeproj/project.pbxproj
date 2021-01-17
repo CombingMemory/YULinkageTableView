@@ -1,0 +1,461 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4164878716D8F6C8763B39A4 /* libPods-YULinkageTableView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CD9BC9AFF8714DEA0CA2C30 /* libPods-YULinkageTableView.a */; };
+		CD2BA54B25A6BDE500A574DC /* TableView.m in Sources */ = {isa = PBXBuildFile; fileRef = CD2BA54A25A6BDE500A574DC /* TableView.m */; };
+		CD2BA54F25A6BF4000A574DC /* SingleTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CD2BA54E25A6BF4000A574DC /* SingleTableVC.m */; };
+		CD4C18A525A598BE006A3240 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4C18A425A598BE006A3240 /* AppDelegate.m */; };
+		CD4C18AB25A598BE006A3240 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4C18AA25A598BE006A3240 /* ViewController.m */; };
+		CD4C18AE25A598BE006A3240 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD4C18AC25A598BE006A3240 /* Main.storyboard */; };
+		CD4C18B025A598C2006A3240 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD4C18AF25A598C2006A3240 /* Assets.xcassets */; };
+		CD4C18B325A598C2006A3240 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD4C18B125A598C2006A3240 /* LaunchScreen.storyboard */; };
+		CD4C18B625A598C2006A3240 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4C18B525A598C2006A3240 /* main.m */; };
+		CD4C18C825A5994C006A3240 /* YULinkageItemObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4C18C025A5994C006A3240 /* YULinkageItemObserver.m */; };
+		CD4C18C925A5994C006A3240 /* YULinkageTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4C18C425A5994C006A3240 /* YULinkageTableView.m */; };
+		CD4C18CA25A5994C006A3240 /* YULinkageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4C18C625A5994C006A3240 /* YULinkageView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1CD9BC9AFF8714DEA0CA2C30 /* libPods-YULinkageTableView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-YULinkageTableView.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA081D9E458E0955BCCB8C7A /* Pods-YULinkageTableView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YULinkageTableView.release.xcconfig"; path = "Target Support Files/Pods-YULinkageTableView/Pods-YULinkageTableView.release.xcconfig"; sourceTree = "<group>"; };
+		CD2BA54925A6BDE500A574DC /* TableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TableView.h; sourceTree = "<group>"; };
+		CD2BA54A25A6BDE500A574DC /* TableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TableView.m; sourceTree = "<group>"; };
+		CD2BA54D25A6BF4000A574DC /* SingleTableVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SingleTableVC.h; sourceTree = "<group>"; };
+		CD2BA54E25A6BF4000A574DC /* SingleTableVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SingleTableVC.m; sourceTree = "<group>"; };
+		CD4C18A025A598BE006A3240 /* YULinkageTableView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YULinkageTableView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD4C18A325A598BE006A3240 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CD4C18A425A598BE006A3240 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CD4C18A925A598BE006A3240 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CD4C18AA25A598BE006A3240 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CD4C18AD25A598BE006A3240 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CD4C18AF25A598C2006A3240 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CD4C18B225A598C2006A3240 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CD4C18B425A598C2006A3240 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CD4C18B525A598C2006A3240 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CD4C18BF25A5994C006A3240 /* YULinkageItemObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YULinkageItemObserver.h; sourceTree = "<group>"; };
+		CD4C18C025A5994C006A3240 /* YULinkageItemObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YULinkageItemObserver.m; sourceTree = "<group>"; };
+		CD4C18C225A5994C006A3240 /* YULinkageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YULinkageProtocol.h; sourceTree = "<group>"; };
+		CD4C18C425A5994C006A3240 /* YULinkageTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YULinkageTableView.m; sourceTree = "<group>"; };
+		CD4C18C525A5994C006A3240 /* YULinkageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YULinkageView.h; sourceTree = "<group>"; };
+		CD4C18C625A5994C006A3240 /* YULinkageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YULinkageView.m; sourceTree = "<group>"; };
+		CD4C18C725A5994C006A3240 /* YULinkageTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YULinkageTableView.h; sourceTree = "<group>"; };
+		D5949C4EB93648800F5D08F4 /* Pods-YULinkageTableView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YULinkageTableView.debug.xcconfig"; path = "Target Support Files/Pods-YULinkageTableView/Pods-YULinkageTableView.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CD4C189D25A598BE006A3240 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4164878716D8F6C8763B39A4 /* libPods-YULinkageTableView.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6047C42C417D871C93B25D76 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D5949C4EB93648800F5D08F4 /* Pods-YULinkageTableView.debug.xcconfig */,
+				AA081D9E458E0955BCCB8C7A /* Pods-YULinkageTableView.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		883813BC5C51310D850A600D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1CD9BC9AFF8714DEA0CA2C30 /* libPods-YULinkageTableView.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CD4C189725A598BE006A3240 = {
+			isa = PBXGroup;
+			children = (
+				CD4C18A225A598BE006A3240 /* YULinkageTableView */,
+				CD4C18A125A598BE006A3240 /* Products */,
+				6047C42C417D871C93B25D76 /* Pods */,
+				883813BC5C51310D850A600D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		CD4C18A125A598BE006A3240 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CD4C18A025A598BE006A3240 /* YULinkageTableView.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CD4C18A225A598BE006A3240 /* YULinkageTableView */ = {
+			isa = PBXGroup;
+			children = (
+				CD4C18BD25A5994C006A3240 /* Classes */,
+				CD4C18A325A598BE006A3240 /* AppDelegate.h */,
+				CD4C18A425A598BE006A3240 /* AppDelegate.m */,
+				CD4C18A925A598BE006A3240 /* ViewController.h */,
+				CD4C18AA25A598BE006A3240 /* ViewController.m */,
+				CD2BA54D25A6BF4000A574DC /* SingleTableVC.h */,
+				CD2BA54E25A6BF4000A574DC /* SingleTableVC.m */,
+				CD2BA54925A6BDE500A574DC /* TableView.h */,
+				CD2BA54A25A6BDE500A574DC /* TableView.m */,
+				CD4C18AC25A598BE006A3240 /* Main.storyboard */,
+				CD4C18AF25A598C2006A3240 /* Assets.xcassets */,
+				CD4C18B125A598C2006A3240 /* LaunchScreen.storyboard */,
+				CD4C18B425A598C2006A3240 /* Info.plist */,
+				CD4C18B525A598C2006A3240 /* main.m */,
+			);
+			path = YULinkageTableView;
+			sourceTree = "<group>";
+		};
+		CD4C18BD25A5994C006A3240 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				CD4C18BE25A5994C006A3240 /* Observer */,
+				CD4C18C125A5994C006A3240 /* Protocol */,
+				CD4C18C325A5994C006A3240 /* View */,
+			);
+			path = Classes;
+			sourceTree = SOURCE_ROOT;
+		};
+		CD4C18BE25A5994C006A3240 /* Observer */ = {
+			isa = PBXGroup;
+			children = (
+				CD4C18BF25A5994C006A3240 /* YULinkageItemObserver.h */,
+				CD4C18C025A5994C006A3240 /* YULinkageItemObserver.m */,
+			);
+			path = Observer;
+			sourceTree = "<group>";
+		};
+		CD4C18C125A5994C006A3240 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				CD4C18C225A5994C006A3240 /* YULinkageProtocol.h */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		CD4C18C325A5994C006A3240 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				CD4C18C725A5994C006A3240 /* YULinkageTableView.h */,
+				CD4C18C425A5994C006A3240 /* YULinkageTableView.m */,
+				CD4C18C525A5994C006A3240 /* YULinkageView.h */,
+				CD4C18C625A5994C006A3240 /* YULinkageView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CD4C189F25A598BE006A3240 /* YULinkageTableView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD4C18B925A598C2006A3240 /* Build configuration list for PBXNativeTarget "YULinkageTableView" */;
+			buildPhases = (
+				47BA93A98B25718EF2C18A2D /* [CP] Check Pods Manifest.lock */,
+				CD4C189C25A598BE006A3240 /* Sources */,
+				CD4C189D25A598BE006A3240 /* Frameworks */,
+				CD4C189E25A598BE006A3240 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YULinkageTableView;
+			productName = YULinkageTableView;
+			productReference = CD4C18A025A598BE006A3240 /* YULinkageTableView.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CD4C189825A598BE006A3240 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					CD4C189F25A598BE006A3240 = {
+						CreatedOnToolsVersion = 12.3;
+					};
+				};
+			};
+			buildConfigurationList = CD4C189B25A598BE006A3240 /* Build configuration list for PBXProject "YULinkageTableView" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CD4C189725A598BE006A3240;
+			productRefGroup = CD4C18A125A598BE006A3240 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CD4C189F25A598BE006A3240 /* YULinkageTableView */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CD4C189E25A598BE006A3240 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD4C18B325A598C2006A3240 /* LaunchScreen.storyboard in Resources */,
+				CD4C18B025A598C2006A3240 /* Assets.xcassets in Resources */,
+				CD4C18AE25A598BE006A3240 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		47BA93A98B25718EF2C18A2D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YULinkageTableView-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CD4C189C25A598BE006A3240 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD4C18AB25A598BE006A3240 /* ViewController.m in Sources */,
+				CD2BA54B25A6BDE500A574DC /* TableView.m in Sources */,
+				CD4C18CA25A5994C006A3240 /* YULinkageView.m in Sources */,
+				CD2BA54F25A6BF4000A574DC /* SingleTableVC.m in Sources */,
+				CD4C18C825A5994C006A3240 /* YULinkageItemObserver.m in Sources */,
+				CD4C18A525A598BE006A3240 /* AppDelegate.m in Sources */,
+				CD4C18C925A5994C006A3240 /* YULinkageTableView.m in Sources */,
+				CD4C18B625A598C2006A3240 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CD4C18AC25A598BE006A3240 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CD4C18AD25A598BE006A3240 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		CD4C18B125A598C2006A3240 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CD4C18B225A598C2006A3240 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CD4C18B725A598C2006A3240 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		CD4C18B825A598C2006A3240 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CD4C18BA25A598C2006A3240 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D5949C4EB93648800F5D08F4 /* Pods-YULinkageTableView.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M3J46398ND;
+				INFOPLIST_FILE = YULinkageTableView/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = yu.YULinkageTableView;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		CD4C18BB25A598C2006A3240 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA081D9E458E0955BCCB8C7A /* Pods-YULinkageTableView.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M3J46398ND;
+				INFOPLIST_FILE = YULinkageTableView/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = yu.YULinkageTableView;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CD4C189B25A598BE006A3240 /* Build configuration list for PBXProject "YULinkageTableView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD4C18B725A598C2006A3240 /* Debug */,
+				CD4C18B825A598C2006A3240 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD4C18B925A598C2006A3240 /* Build configuration list for PBXNativeTarget "YULinkageTableView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD4C18BA25A598C2006A3240 /* Debug */,
+				CD4C18BB25A598C2006A3240 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CD4C189825A598BE006A3240 /* Project object */;
+}

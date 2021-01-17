@@ -1,0 +1,6 @@
+framework module Pods_YULinkageTableView {
+  umbrella header "Pods-YULinkageTableView-umbrella.h"
+
+  export *
+  module * { export * }
+}
