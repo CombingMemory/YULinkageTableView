@@ -8,6 +8,7 @@
 
 #import "YULinkageTableView.h"
 #import "YULinkageView.h"
+#import <Masonry/Masonry.h>
 
 @interface YULinkageTableView()<UITableViewDelegate,UITableViewDataSource,YULinkageViewDelegate>
 
@@ -22,6 +23,10 @@
 @property (nonatomic, assign) float previou_offset_y;
 
 @property (nonatomic, assign) YULinkageTouchMove touch_move;
+/// 注释:001
+@property (nonatomic, assign) BOOL isInsideFirstTrigger;
+/// 相应的子视图
+@property (nonatomic, weak) UIScrollView *response_subview;
 
 @end
 
@@ -41,7 +46,6 @@
 
 
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style{
-    //    self = [super initWithFrame:frame style:UITableViewStylePlain];
     self = [super initWithFrame:frame style:UITableViewStyleGrouped];
     if (self) {
         [self _init];
@@ -51,8 +55,8 @@
 
 - (void)_init{
     self.isCanScroll = YES;
-    self.delegate = self;
-    self.dataSource = self;
+    [super setDelegate:self];
+    [super setDataSource:self];
     self.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.showsVerticalScrollIndicator = NO;
     // 注册cell
@@ -61,16 +65,7 @@
     
     
     self.linkage_view = [[YULinkageView alloc] init];
-    self.linkage_view.translatesAutoresizingMaskIntoConstraints = NO;
     self.linkage_view.yu_delegate = self;
-    __weak __typeof(&*self)weakSelf = self;
-    self.linkage_view.currentIndexChanged = ^(int index) {
-        weakSelf.touch_move = YULinkageTouchMoveNone;
-        /// block转发
-        if (weakSelf.currentIndexChanged) {
-            weakSelf.currentIndexChanged(index);
-        }
-    };
 }
 
 #pragma mark tableView的代理
@@ -94,7 +89,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat cell_height = self.bounds.size.height - self.segmented_height;
     if (@available(iOS 11.0, *)) {
-        cell_height -= self.safeAreaInsets.top;
+        cell_height -= self.adjustedContentInset.top;
+    }else{
+        cell_height -= self.adjustedTop;
     }
     return cell_height;
 }
@@ -109,68 +106,97 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     // 添加视图
     [cell.contentView addSubview:self.linkage_view];
-    // 删除旧约束
-    [self.linkage_view.superview removeConstraints:self.linkage_view.superview.constraints];
     // 添加约束
-    NSLayoutConstraint *left_constraint = [NSLayoutConstraint constraintWithItem:self.linkage_view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.linkage_view.superview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
-    NSLayoutConstraint *right_constraint = [NSLayoutConstraint constraintWithItem:self.linkage_view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.linkage_view.superview attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
-    NSLayoutConstraint *top_constraint = [NSLayoutConstraint constraintWithItem:self.linkage_view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.linkage_view.superview attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
-    NSLayoutConstraint *bottom_constraint = [NSLayoutConstraint constraintWithItem:self.linkage_view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.linkage_view.superview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
-    [self.linkage_view.superview addConstraints:@[left_constraint,right_constraint,top_constraint,bottom_constraint]];
+    [self.linkage_view mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
+    }];
     return cell;
 }
 #pragma mark LinkageView的代理
-/// 其中一个滑动到顶部了 通知所有的子试图不可以滑动
+/// 其中一个滑动到顶部了 根视图恢复滑动  同时通知所有的子试图不可以滑动
 - (void)restoreRootViewScroll{
     self.isCanScroll = YES;
     [self.linkage_view subViewsNotScrollable];
 }
-/// 同步自视图的滑动状态
+/// 同步自视图的滑动状态 这里是子ScrollView的回调
 - (void)returnTouchMove:(YULinkageTouchMove)touch_move{
+    // 注释:001
+    self.isInsideFirstTrigger = YES;
     self.touch_move = touch_move;
+}
+
+#pragma YULinkageView offsetX滑动返回
+/// YULinkageView offsetX滑动返回
+- (void)didScrollForOffsetX:(float)offsetX{
+    if (self.didScroll) {
+        self.didScroll(offsetX, self.contentOffset.y);
+    }
+}
+
+/// 本视图 YULinkageTableView offsetY 滑动返回代理
+- (void)didScrollForOffsetY:(float)offsetY{
+    if (self.didScroll) {
+        self.didScroll(self.linkage_view.contentOffset.x, offsetY);
+    }
 }
 
 #pragma mark scrollView的代理
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     self.previou_offset_y = scrollView.contentOffset.y;
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewWillBeginDragging:scrollView];
+    // 注释:001
+    if (!self.isInsideFirstTrigger) {
+        self.touch_move = YULinkageTouchMoveNone;
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGFloat offset_y = scrollView.contentOffset.y;
+    if (offset_y == self.previou_offset_y) {
+        [self didScrollForOffsetY:scrollView.contentOffset.y];
+        return;
+    }
     // 同时也是headerView的高度
     CGFloat cell_y = [self rectForSection:0].origin.y;
+    // 适配调整后的高度
     if (@available(iOS 11.0, *)) {
-        cell_y -= self.safeAreaInsets.top;
+        cell_y -= self.adjustedContentInset.top;
+    }else{
+        cell_y -= self.adjustedTop;
     }
-    CGFloat offset_y = scrollView.contentOffset.y;
+    // 判断是否不可滑动
     if (!self.isCanScroll) {
         scrollView.contentOffset = CGPointMake(0, cell_y);
+        [self didScrollForOffsetY:scrollView.contentOffset.y];
         return;
     }
+    // 判断header是否已经滑动完毕。更改为不可滑动状态
     if (offset_y >= cell_y) {
         self.isCanScroll = NO;
-        self.touch_move = YULinkageTouchMoveNone;
+        self.touch_move = YULinkageTouchMoveFinish;
         scrollView.contentOffset = CGPointMake(0, cell_y);
         [self.linkage_view restoreSubViewsScroll];
+        [self didScrollForOffsetY:scrollView.contentOffset.y];
         return;
     }
+    // 这里只拖动了 header 那么什么也不执行
+    if (!self.response_subview) return;
     switch (self.touch_move) {
         case YULinkageTouchMoveFinish:break;
         case YULinkageTouchMoveNone:
         case YULinkageTouchMoveUp:{
             float differ = offset_y - self.previou_offset_y;
+            YULinkageTouchMove touch_move = YULinkageTouchMoveUp;
             if (differ > 0) {
-                self.touch_move = YULinkageTouchMoveUp;
+                touch_move = YULinkageTouchMoveUp;
                 self.previou_offset_y = offset_y;
-                
             }else{
-                self.touch_move = YULinkageTouchMoveDown;
+                touch_move = YULinkageTouchMoveDown;
                 scrollView.contentOffset = CGPointMake(0, self.previou_offset_y);
             }
-            // 同步子视图的滑动状态
-            self.touch_move = [self.linkage_view touchMove:self.touch_move];
+            if (self.touch_move != touch_move) {// 不用多次同步
+                // 同步子视图的滑动状态
+                self.touch_move = [self.linkage_view syncTouchMove:touch_move];
+            }
             break;
         }
         case YULinkageTouchMoveDown:{
@@ -178,86 +204,34 @@
             break;
         }
     }
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewDidScroll:scrollView];
-    }
+    [self didScrollForOffsetY:scrollView.contentOffset.y];
 }
 
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewDidZoom:scrollView];
-    }
-}
-
-
+/// 手指离开
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
-    }
+    // 注释:001
+    self.isInsideFirstTrigger = NO;
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-    }
+#pragma mark 实现方法 方法转发
+- (void)setCurrentIndexChanged:(void (^)(int))currentIndexChanged{
+    self.linkage_view.currentIndexChanged = currentIndexChanged;
 }
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewWillBeginDecelerating:scrollView];
-    }
+- (void (^)(int))currentIndexChanged{
+    return self.linkage_view.currentIndexChanged;
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewDidEndDecelerating:scrollView];
-    }
-}
-
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewDidEndScrollingAnimation:scrollView];
-    }
-}
-
-- (nullable UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        return [_outer_delegate viewForZoomingInScrollView:scrollView];
-    } else {
-        return nil;
-    }
-}
-- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(nullable UIView *)view{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewWillBeginZooming:scrollView withView:view];
-    }
-}
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(nullable UIView *)view atScale:(CGFloat)scale{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
-    }
-}
-
-- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        return [_outer_delegate scrollViewShouldScrollToTop:scrollView];
-    }
-    return YES;
-}
-
-- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView{
-    if ([_outer_delegate respondsToSelector:_cmd]) {
-        [_outer_delegate scrollViewDidScrollToTop:scrollView];
-    }
-}
-
-#pragma mark 实现方法
 - (void)setCurrentIndex:(int)currentIndex{
     self.linkage_view.currentIndex = currentIndex;
 }
 
 - (int)currentIndex{
     return self.linkage_view.currentIndex;
+}
+
+- (void)setCurrentIndex:(int)currentIndex animated:(BOOL)animated{
+    [self.linkage_view setCurrentIndex:currentIndex animated:animated];
 }
 
 - (void)setDelegate:(id<UITableViewDelegate>)delegate{
@@ -296,6 +270,7 @@
 - (BOOL)removeSubviewAtIndex:(NSInteger)index{
     return [self.linkage_view removeSubviewAtIndex:index];
 }
+#pragma mark 添加Segmented
 /// 添加Segmented
 - (void)setSegmented:(UIView *)segmented {
     if (_segmented == segmented) return;
@@ -318,17 +293,24 @@
         CGRect new_frame = [new_value CGRectValue];
         NSValue *old_value = change[@"old"];
         CGRect olb_frame = [old_value CGRectValue];
-        if (CGSizeEqualToSize(new_frame.size, olb_frame.size)) return;
+        if (new_frame.size.height == olb_frame.size.height) return;
         self.segmented_height = new_frame.size.height;
         [self reloadData];
-        
     }
 }
 /// 是否与其他手势识别器同时识别
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     UIScrollView *aScrollView = (UIScrollView *)otherGestureRecognizer.view;
-    return [self.linkage_view canLinkageWithSrollView:aScrollView];
-    
+    if (![aScrollView isKindOfClass:[UIScrollView class]]) return NO;
+    if ([aScrollView.class.description isEqualToString:@"UITableViewWrapperView"]) return NO;
+    BOOL isCanLinkage = NO;
+    isCanLinkage = [self.linkage_view canLinkageWithSrollView:aScrollView];
+    if (isCanLinkage) {
+        self.response_subview = aScrollView;
+    }else{
+        self.response_subview = nil;
+    }
+    return isCanLinkage;
 }
 
 - (void)dealloc{

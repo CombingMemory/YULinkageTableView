@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Xdl-Um-MfZ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -41,24 +42,10 @@
                     <view key="view" contentMode="scaleToFill" id="XeK-0h-bRZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="U9o-bT-WQY" customClass="YULinkageTableView">
-                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
-                            </tableView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="69Y-FX-EBd"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="U9o-bT-WQY" firstAttribute="top" secondItem="69Y-FX-EBd" secondAttribute="top" id="Ksm-Tr-jFz"/>
-                            <constraint firstItem="U9o-bT-WQY" firstAttribute="bottom" secondItem="69Y-FX-EBd" secondAttribute="bottom" id="Pj4-S9-5uv"/>
-                            <constraint firstItem="U9o-bT-WQY" firstAttribute="leading" secondItem="69Y-FX-EBd" secondAttribute="leading" id="Zzw-z3-KVy"/>
-                            <constraint firstItem="U9o-bT-WQY" firstAttribute="trailing" secondItem="69Y-FX-EBd" secondAttribute="trailing" id="x9x-8U-COu"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="sbb-AF-S7T"/>
-                    <connections>
-                        <outlet property="linkage_tableView" destination="U9o-bT-WQY" id="W4R-Vf-6bo"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PFw-rg-9L9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -19,6 +19,8 @@
 @property (nonatomic, strong) NSMutableArray<YULinkageItemObserver *> *observers;
 
 @property (nonatomic, strong) MASConstraint *right_constraint;
+/// 执行动画中   注释：002
+@property (nonatomic, assign) BOOL isOffsetAnimation;
 
 @end
 
@@ -41,18 +43,41 @@
 
 /// 设置下标
 - (void)setCurrentIndex:(int)currentIndex{
-    if (_currentIndex == currentIndex) return;
-    [self setContentOffset:CGPointMake(self.frame.size.width * currentIndex, 0) animated:YES];
+    [self setCurrentIndex:currentIndex animated:NO];
 }
+/// 设置下标
+- (void)setCurrentIndex:(int)currentIndex animated:(BOOL)animated{
+    currentIndex = [self checkIndexOutOfBounds:currentIndex];
+    if (_currentIndex == currentIndex) return;
+    _currentIndex = currentIndex;
+    // 注释：002
+    self.isOffsetAnimation = animated;
+    [self setContentOffset:CGPointMake(self.frame.size.width * currentIndex, 0) animated:animated];
+    // 注释：002
+    if (animated) {
+        [NSRunLoop cancelPreviousPerformRequestsWithTarget:self selector:@selector(offsetAnimationAction) object:nil];
+        [self performSelector:@selector(offsetAnimationAction) withObject:nil afterDelay:0.3 inModes:@[NSRunLoopCommonModes]];
+    }
+}
+/// offset动画执行  注释：002
+- (void)offsetAnimationAction{
+    self.isOffsetAnimation = NO;
+}
+
+- (int)checkIndexOutOfBounds:(int)index{
+    // 防止越界
+    if (index < 0) {
+        return 0;
+    }
+    if (index > self.contentView.subviews.count - 1) {
+        return (int)self.contentView.subviews.count - 1;
+    }
+    return index;
+}
+
 /// 返回是否可以联动
 - (BOOL)canLinkageWithSrollView:(nonnull UIScrollView *)aScrollView{
-    if (self.scrollerViews.count) {
-        UIScrollView *subScrollView = self.scrollerViews[self.currentIndex];
-        if (subScrollView == aScrollView) {
-            return YES;
-        }
-    }
-    return NO;
+    return [self.scrollerViews containsObject:aScrollView];
 }
 /// 添加scrollView
 - (BOOL)addScrollView:(nonnull UIScrollView *)scrollView{
@@ -200,16 +225,25 @@
 }
 
 /// 子视图与root视图的状态同步
-- (YULinkageTouchMove)touchMove:(YULinkageTouchMove)touch_move{
+- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move{
     if (!self.observers.count) return YULinkageTouchMoveFinish;
     YULinkageItemObserver *observer = self.observers[self.currentIndex];
-    return [observer touchMove:touch_move];
+    return [observer syncTouchMove:touch_move];
 }
 
 #pragma mark scrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    int currentIndex = (int)scrollView.contentOffset.x / scrollView.frame.size.width;
-    if (currentIndex == self.currentIndex || currentIndex < 0) return;
+    float offsetX = scrollView.contentOffset.x;
+    if ([_yu_delegate respondsToSelector:@selector(didScrollForOffsetX:)]) {
+        [_yu_delegate didScrollForOffsetX:offsetX];
+    }
+    // 注释：002
+    if (self.isOffsetAnimation) return;
+    // 滑动时计算 index
+    offsetX += scrollView.frame.size.width / 2;
+    int currentIndex = (int)offsetX / scrollView.frame.size.width;
+    currentIndex = [self checkIndexOutOfBounds:currentIndex];
+    if (_currentIndex == currentIndex) return;
     _currentIndex = currentIndex;
     if (self.currentIndexChanged) {
         self.currentIndexChanged(self.currentIndex);

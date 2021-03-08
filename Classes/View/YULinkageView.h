@@ -10,14 +10,32 @@
 #import "YULinkageTableView.h"
 #import "YULinkageProtocol.h"
 
+@protocol YULinkageViewDelegate <NSObject>
+
+@required
+- (void)restoreRootViewScroll;
+
+- (void)returnTouchMove:(YULinkageTouchMove)touch_move;
+
+- (void)didScrollForOffsetX:(float)offsetX;
+
+@end
+
+
+
 @interface YULinkageView : UIScrollView
 
 /// 当前的index
 @property (nonatomic, assign) int currentIndex;
 /// currentIndex 发生了改变
 @property (nonatomic, copy) void (^ _Nullable currentIndexChanged)(int index);
-
+/// 代理
 @property (nonatomic, weak, nullable) id <YULinkageViewDelegate> yu_delegate;
+
+
+
+/// 设置index
+- (void)setCurrentIndex:(int)currentIndex animated:(BOOL)animated;
 /// 返回是否可以联动
 - (BOOL)canLinkageWithSrollView:(nonnull UIScrollView *)aScrollView;
 /// 添加scrollView
@@ -35,6 +53,6 @@
 /// 所以子视图暂停滑动
 - (void)subViewsNotScrollable;
 /// root视图与子视图同步滑动状态
-- (YULinkageTouchMove)touchMove:(YULinkageTouchMove)touch_move;
+- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move;
 
 @end

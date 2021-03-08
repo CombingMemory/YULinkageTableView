@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 恢复滑动
 - (void)restoreScroll;
 /// root视图与子视图同步滑动状态
-- (YULinkageTouchMove)touchMove:(YULinkageTouchMove)touch_move;
+- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move;
 
 @end
 

@@ -17,22 +17,11 @@ typedef NS_ENUM(int, YULinkageTouchMove){
     YULinkageTouchMoveFinish
 };
 
-@protocol YULinkageTableViewDelegate <UIScrollViewDelegate>
+@protocol YULinkageTableViewDelegate <NSObject>
 @required
 /// 提供可以用来响应的ScrollVIew
 - (nonnull UIScrollView *)provideScrollViewForResponse;
 
 @end
-
-
-@protocol YULinkageViewDelegate <NSObject>
-
-@required
-- (void)restoreRootViewScroll;
-
-- (void)returnTouchMove:(YULinkageTouchMove)touch_move;
-
-@end
-
 
 NS_ASSUME_NONNULL_END

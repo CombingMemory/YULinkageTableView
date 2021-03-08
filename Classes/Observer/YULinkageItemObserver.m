@@ -37,39 +37,81 @@
     }
     // 如果有可以滑动不做任何操作
     if (self.isCanScroll) return;
+    // 根据touch_move来判断是否可以滑动
+    [self touchMoveForNewY:new_y oldY:old_y];
+}
+
+/// 根据touch_move来判断是否可以滑动
+- (void)touchMoveForNewY:(float)new_y oldY:(float)old_y{
     switch (self.touch_move) {
-        case YULinkageTouchMoveFinish:
-        case YULinkageTouchMoveNone:{
+        case YULinkageTouchMoveFinish:{
             [self.scrollView setContentOffset:CGPointZero];
             break;
         }
+        case YULinkageTouchMoveNone:{
+            [self moveNoneForNewY:new_y oldY:old_y];
+            break;
+        }
         case YULinkageTouchMoveUp:{
-            if (self.previou_offset_y <= 0) {                self.previou_offset_y = old_y;
-            }
-            [self.scrollView setContentOffset:CGPointMake(0, self.previou_offset_y)];
+            [self moveUpForNewY:new_y oldY:old_y];
             break;
         }
         case YULinkageTouchMoveDown:{
-            if (new_y <= 0) {
-                self.touch_move = YULinkageTouchMoveFinish;
-                [self.scrollView setContentOffset:CGPointZero];
-                if ([self.yu_delegate respondsToSelector:@selector(returnTouchMove:)]) {
-                    [self.yu_delegate returnTouchMove:self.touch_move];
-                }
-                self.previou_offset_y = 0;
-                return;
-            }
-            float differ = new_y - old_y;
-            if (differ > 0) {
-                self.touch_move = YULinkageTouchMoveUp;
-                [self.scrollView setContentOffset:CGPointMake(0, old_y)];
-                if ([self.yu_delegate respondsToSelector:@selector(returnTouchMove:)]) {
-                    [self.yu_delegate returnTouchMove:self.touch_move];
-                }
-            }
-            self.previou_offset_y = new_y;
+            [self moveDownForNewY:new_y oldY:old_y];
             break;
         }
+    }
+}
+
+/// 默认状态下执行的方法 moveNone
+- (void)moveNoneForNewY:(float)new_y oldY:(float)old_y{
+    // 注释:001
+    YULinkageTouchMove touch_move = [self getTouchMoveForNewY:new_y oldY:old_y];
+    self.touch_move = [self syncTouchMove:touch_move];
+    // 同步touch_move
+    [self syncRootViewTouchMove];
+    [self touchMoveForNewY:new_y oldY:old_y];
+}
+
+/// 向上滑动执行的方法 moveUp
+- (void)moveUpForNewY:(float)new_y oldY:(float)old_y{
+    if (self.previou_offset_y <= 0) {
+        self.previou_offset_y = old_y;
+    }
+    [self.scrollView setContentOffset:CGPointMake(0, self.previou_offset_y)];
+}
+
+/// 向下滑动执行的方法 moveDown
+- (void)moveDownForNewY:(float)new_y oldY:(float)old_y{
+    if (new_y <= 0) {
+        self.touch_move = YULinkageTouchMoveFinish;
+        [self.scrollView setContentOffset:CGPointZero];
+        [self syncRootViewTouchMove];
+        self.previou_offset_y = 0;
+        return;
+    }
+    self.touch_move = [self getTouchMoveForNewY:new_y oldY:old_y];
+    if (self.touch_move == YULinkageTouchMoveUp) {
+        [self.scrollView setContentOffset:CGPointMake(0, old_y)];
+        [self syncRootViewTouchMove];
+    }
+    self.previou_offset_y = new_y;
+}
+
+/// 同步外部根视图的的TouchMove状态
+- (void)syncRootViewTouchMove{
+    if ([self.yu_delegate respondsToSelector:@selector(returnTouchMove:)]) {
+        [self.yu_delegate returnTouchMove:self.touch_move];
+    }
+}
+
+/// 判断touchMove的状态
+- (YULinkageTouchMove)getTouchMoveForNewY:(float)new_y oldY:(float)old_y{
+    float differ = new_y - old_y;
+    if (differ > 0) {
+        return YULinkageTouchMoveUp;
+    }else{
+        return YULinkageTouchMoveDown;
     }
 }
 
@@ -92,7 +134,7 @@
     }
 }
 
-- (YULinkageTouchMove)touchMove:(YULinkageTouchMove)touch_move{
+- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move{
     if (self.scrollView.contentOffset.y && !self.isCanScroll) {
         self.touch_move = touch_move;
         return touch_move;
