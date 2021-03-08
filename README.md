@@ -1,6 +1,6 @@
 # YULinkageTableView
 
-####特性
+#### 特性
 - 使用方便、代码0入侵
 - 使用时添加需要联动的ScrollView即可
 - 不用接入ScrollView任何代理，设置任何属性或继承自某父类
@@ -10,7 +10,7 @@
 - 支持adjustedContentInset
 - 支持iOS 11以下的版本
 
-####API
+#### API
 
 ```
 /// 当前的index
@@ -54,7 +54,7 @@
 
 ```
 
-####版本
+#### 版本
 **v 1.1.0**
 - 修复了部分联动错误
 - 适配了adjustedContentInset
