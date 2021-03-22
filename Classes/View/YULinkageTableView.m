@@ -82,9 +82,7 @@
     }
     return header;
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return 0;
-}
+
 /// cell的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat cell_height = self.bounds.size.height - self.segmented_height;
@@ -149,12 +147,8 @@
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset_y = scrollView.contentOffset.y;
-    if (offset_y == self.previou_offset_y) {
-        [self didScrollForOffsetY:scrollView.contentOffset.y];
-        return;
-    }
     // 同时也是headerView的高度
     CGFloat cell_y = [self rectForSection:0].origin.y;
     // 适配调整后的高度
@@ -171,10 +165,10 @@
     }
     // 判断header是否已经滑动完毕。更改为不可滑动状态
     if (offset_y >= cell_y) {
-        self.isCanScroll = NO;
+        BOOL resust = [self.linkage_view restoreSubViewsScroll];
+        self.isCanScroll = !resust;
         self.touch_move = YULinkageTouchMoveFinish;
         scrollView.contentOffset = CGPointMake(0, cell_y);
-        [self.linkage_view restoreSubViewsScroll];
         [self didScrollForOffsetY:scrollView.contentOffset.y];
         return;
     }

@@ -31,13 +31,14 @@
     CGFloat old_y = [old_value CGPointValue].y;
     if (new_y == old_y) return;
     // 判断是否到达了顶部
-    if (new_y < 0 && self.isCanScroll) {
-        [self notScrollable];
+    if (self.isCanScroll) {
+        if (new_y <= -self.scrollView.contentInset.top) {
+            // 变为不可滑动状态
+            [self notScrollable];
+        }
         return;
     }
-    // 如果有可以滑动不做任何操作
-    if (self.isCanScroll) return;
-    // 根据touch_move来判断是否可以滑动
+    // 不可滑动后 根据touch_move来判断该有的状态
     [self touchMoveForNewY:new_y oldY:old_y];
 }
 
@@ -45,7 +46,7 @@
 - (void)touchMoveForNewY:(float)new_y oldY:(float)old_y{
     switch (self.touch_move) {
         case YULinkageTouchMoveFinish:{
-            [self.scrollView setContentOffset:CGPointZero];
+            [self.scrollView setContentOffset:CGPointMake(0, -self.scrollView.contentInset.top)];
             break;
         }
         case YULinkageTouchMoveNone:{
@@ -65,17 +66,16 @@
 
 /// 默认状态下执行的方法 moveNone
 - (void)moveNoneForNewY:(float)new_y oldY:(float)old_y{
-    // 注释:001
     YULinkageTouchMove touch_move = [self getTouchMoveForNewY:new_y oldY:old_y];
-    self.touch_move = [self syncTouchMove:touch_move];
-    // 同步touch_move
+    self.touch_move = [self syncTouchMove:touch_move offsetY:old_y];
+    // 同步touch_move // 注释:001
     [self syncRootViewTouchMove];
     [self touchMoveForNewY:new_y oldY:old_y];
 }
 
 /// 向上滑动执行的方法 moveUp
 - (void)moveUpForNewY:(float)new_y oldY:(float)old_y{
-    if (self.previou_offset_y <= 0) {
+    if (self.previou_offset_y <= -self.scrollView.contentInset.top) {
         self.previou_offset_y = old_y;
     }
     [self.scrollView setContentOffset:CGPointMake(0, self.previou_offset_y)];
@@ -83,11 +83,11 @@
 
 /// 向下滑动执行的方法 moveDown
 - (void)moveDownForNewY:(float)new_y oldY:(float)old_y{
-    if (new_y <= 0) {
+    if (new_y <= -self.scrollView.contentInset.top) {
         self.touch_move = YULinkageTouchMoveFinish;
         [self.scrollView setContentOffset:CGPointZero];
         [self syncRootViewTouchMove];
-        self.previou_offset_y = 0;
+        self.previou_offset_y = -self.scrollView.contentInset.top;
         return;
     }
     self.touch_move = [self getTouchMoveForNewY:new_y oldY:old_y];
@@ -118,7 +118,7 @@
 /// 恢复滑动
 - (void)restoreScroll{
     self.isCanScroll = YES;
-    self.previou_offset_y = 0;
+    self.previou_offset_y = -self.scrollView.contentInset.top;
     self.touch_move = YULinkageTouchMoveNone;
     self.scrollView.showsVerticalScrollIndicator = YES;
 }
@@ -126,8 +126,8 @@
 ///  自己滑动到了顶部 自己不可滑动了
 - (void)notScrollable{
     self.isCanScroll = NO;
-    [self.scrollView setContentOffset:CGPointZero];
-    self.previou_offset_y = 0;
+    [self.scrollView setContentOffset:CGPointMake(0, -self.scrollView.contentInset.top)];
+    self.previou_offset_y = -self.scrollView.contentInset.top;
     self.scrollView.showsVerticalScrollIndicator = NO;
     if ([_yu_delegate respondsToSelector:@selector(restoreRootViewScroll)]) {
         [_yu_delegate restoreRootViewScroll];
@@ -135,7 +135,11 @@
 }
 
 - (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move{
-    if (self.scrollView.contentOffset.y && !self.isCanScroll) {
+    return [self syncTouchMove:touch_move offsetY:self.scrollView.contentOffset.y];
+}
+
+- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move offsetY:(CGFloat)offsetY{
+    if (offsetY > -self.scrollView.contentInset.top && !self.isCanScroll) {
         self.touch_move = touch_move;
         return touch_move;
     }else{

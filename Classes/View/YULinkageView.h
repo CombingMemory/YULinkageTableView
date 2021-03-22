@@ -49,7 +49,7 @@
 /// 删除scrollView
 - (BOOL)removeSubviewAtIndex:(NSInteger)index;
 /// 恢复所有子视图的滑动
-- (void)restoreSubViewsScroll;
+- (BOOL)restoreSubViewsScroll;
 /// 所以子视图暂停滑动
 - (void)subViewsNotScrollable;
 /// root视图与子视图同步滑动状态

@@ -81,7 +81,7 @@
     one4.backgroundColor = [UIColor cyanColor];
     [self.linkage_tableView addScrollView:one4];
 
-    TableView *one5 = [[TableView alloc] init];
+    TableView *one5 = [[TableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     one5.tag = 6;
     one5.backgroundColor = [UIColor orangeColor];
     [self.linkage_tableView addScrollView:one5];
@@ -89,11 +89,13 @@
     SingleTableVC *s_vc = [[SingleTableVC alloc] init];
     [self addChildViewController:s_vc];
     [self.linkage_tableView insertScrollViewWithVC:s_vc atIndex:0];
+    
+    
     UIBarButtonItem *delete_item = [[UIBarButtonItem alloc] initWithTitle:@"删除" style:UIBarButtonItemStylePlain target:self action:@selector(deleteScrollView)];
     self.navigationItem.rightBarButtonItem = delete_item;
     
     self.linkage_tableView.currentIndexChanged = ^(int index) {
-        NSLog(@"%d",index);
+//        NSLog(@"%d",index);
     };
     
     self.linkage_tableView.didScroll = ^(float offsetX, float offsetY) {
@@ -103,10 +105,10 @@
 }
 
 - (void)deleteScrollView{
-//    [self.linkage_tableView removeSubviewAtIndex:1];
-    [self.linkage_tableView setCurrentIndex:6 animated:YES];
-    [self.linkage_tableView setCurrentIndex:0 animated:YES];
-    [self.linkage_tableView setCurrentIndex:3 animated:YES];
+    [self.linkage_tableView removeSubviewAtIndex:10];
+//    [self.linkage_tableView setCurrentIndex:6 animated:YES];
+//    [self.linkage_tableView setCurrentIndex:0 animated:YES];
+//    [self.linkage_tableView setCurrentIndex:3 animated:YES];
 }
 
 

@@ -32,8 +32,9 @@
 
 - (TableView *)tableView{
     if (!_tableView) {
-        _tableView = [[TableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        _tableView.tag = 10;
+        _tableView = [[TableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStylePlain];
+//        _tableView = [[TableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.contentInset = UIEdgeInsetsMake(100, 0, 0, 0);
     }
     return _tableView;
 }

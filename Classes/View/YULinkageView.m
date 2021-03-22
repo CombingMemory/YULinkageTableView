@@ -30,6 +30,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.pagingEnabled = YES;
+        self.directionalLockEnabled = YES;
         self.delegate = self;
         self.contentView = [[UIView alloc] init];
         [self addSubview:self.contentView];
@@ -47,7 +48,7 @@
 }
 /// 设置下标
 - (void)setCurrentIndex:(int)currentIndex animated:(BOOL)animated{
-    currentIndex = [self checkIndexOutOfBounds:currentIndex];
+    currentIndex = (int)[self checkIndexOutOfBounds:currentIndex];
     if (_currentIndex == currentIndex) return;
     _currentIndex = currentIndex;
     // 注释：002
@@ -64,13 +65,13 @@
     self.isOffsetAnimation = NO;
 }
 
-- (int)checkIndexOutOfBounds:(int)index{
+- (NSInteger)checkIndexOutOfBounds:(NSInteger)index{
     // 防止越界
     if (index < 0) {
         return 0;
     }
     if (index > self.contentView.subviews.count - 1) {
-        return (int)self.contentView.subviews.count - 1;
+        return (NSInteger)self.contentView.subviews.count - 1;
     }
     return index;
 }
@@ -81,11 +82,13 @@
 }
 /// 添加scrollView
 - (BOOL)addScrollView:(nonnull UIScrollView *)scrollView{
-    return [self insertScrollView:scrollView atIndex:self.scrollerViews.count];
+    return [self insertScrollView:scrollView atIndex:self.contentView.subviews.count];
 }
 /// 插入scrollView
 - (BOOL)insertScrollView:(nonnull UIScrollView *)scrollView atIndex:(NSInteger)index{
-    if (index > self.contentView.subviews.count) return NO;
+    // 防止越界
+    index = index < 0?0:index;
+    index = index > self.contentView.subviews.count?self.contentView.subviews.count:index;
     if (![scrollView isKindOfClass:[UIScrollView class]]) return NO;
     // 添加滚动视图到指定数组
     [self.scrollerViews insertObject:scrollView atIndex:index];
@@ -103,11 +106,13 @@
 }
 /// 根据VC添加scrollView
 - (BOOL)addScrollViewWithVC:(nonnull UIViewController<YULinkageTableViewDelegate> *)vc{
-    return [self insertScrollViewWithVC:vc atIndex:self.scrollerViews.count];
+    return [self insertScrollViewWithVC:vc atIndex:self.contentView.subviews.count];
 }
 /// 根据VC插入scrollView
 - (BOOL)insertScrollViewWithVC:(nonnull UIViewController<YULinkageTableViewDelegate> *)vc atIndex:(NSInteger)index{
-    if (index > self.contentView.subviews.count) return NO;
+    // 防止越界
+    index = index < 0?0:index;
+    index = index > self.contentView.subviews.count?self.contentView.subviews.count:index;
     if (![vc respondsToSelector:@selector(provideScrollViewForResponse)]) return NO;
     UIScrollView *scrollView = [vc provideScrollViewForResponse];
     if (![scrollView isKindOfClass:[UIScrollView class]]) return NO;
@@ -163,8 +168,9 @@
 
 /// 删除scrollView
 - (BOOL)removeSubviewAtIndex:(NSInteger)index{
-    if (index >= self.contentView.subviews.count) return NO;
+    index = [self checkIndexOutOfBounds:index];
     NSUInteger count = self.contentView.subviews.count;
+    if (0 == count) return NO;
     UIScrollView *scrollView = self.scrollerViews[index];
     YULinkageItemObserver *observer = self.observers[index];
     UIView *subview = self.contentView.subviews[index];
@@ -185,6 +191,7 @@
     [self.scrollerViews removeObject:scrollView];
     // 移除视图
     [subview removeFromSuperview];
+    // 重新调整约束
     if (!next_subview) {// 代表最后一个被删除了
         [self resetContentSize];
     }else if (!previou_sbuview) {// 代表第一个被删除了
@@ -204,7 +211,7 @@
 }
 /// 重设可滑动的宽度
 - (void)resetContentSize{
-    UIScrollView *last_subview = self.scrollerViews.lastObject;
+    UIView *last_subview = self.contentView.subviews.lastObject;
     if (last_subview) {
         [self.right_constraint uninstall];
         [self.contentView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -213,9 +220,15 @@
     }
 }
 /// 恢复子视图的滑动
-- (void)restoreSubViewsScroll{
+- (BOOL)restoreSubViewsScroll {
+    /// 遍历所有的observer
     for (YULinkageItemObserver *observer in self.observers) {
         [observer restoreScroll];
+    }
+    if (self.observers.count) {
+        return YES;
+    }else{
+        return NO;
     }
 }
 
@@ -242,7 +255,7 @@
     // 滑动时计算 index
     offsetX += scrollView.frame.size.width / 2;
     int currentIndex = (int)offsetX / scrollView.frame.size.width;
-    currentIndex = [self checkIndexOutOfBounds:currentIndex];
+    currentIndex = (int)[self checkIndexOutOfBounds:currentIndex];
     if (_currentIndex == currentIndex) return;
     _currentIndex = currentIndex;
     if (self.currentIndexChanged) {
