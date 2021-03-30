@@ -14,10 +14,8 @@
 
 @property (nonatomic, strong) UIView *contentView;
 
-@property (nonatomic, strong) NSMutableArray<UIScrollView *> *scrollerViews;
-
-@property (nonatomic, strong) NSMutableArray<YULinkageItemObserver *> *observers;
-
+@property (nonatomic, strong) NSMutableArray<NSMutableArray<YULinkageItemObserver *> *> *items;
+/// 约束
 @property (nonatomic, strong) MASConstraint *right_constraint;
 /// 执行动画中   注释：002
 @property (nonatomic, assign) BOOL isOffsetAnimation;
@@ -77,8 +75,15 @@
 }
 
 /// 返回是否可以联动
-- (BOOL)canLinkageWithSrollView:(nonnull UIScrollView *)aScrollView{
-    return [self.scrollerViews containsObject:aScrollView];
+- (BOOL)canLinkageWithSrollView:(nonnull UIScrollView *)aScrollView {
+    if (0 == self.items.count) return NO;
+    NSMutableArray *item = self.items[self.currentIndex];
+    for (YULinkageItemObserver *observer in item) {
+        if (aScrollView == observer.scrollView) {
+            return YES;
+        }
+    }
+    return NO;
 }
 /// 添加scrollView
 - (BOOL)addScrollView:(nonnull UIScrollView *)scrollView{
@@ -89,17 +94,10 @@
     // 防止越界
     index = index < 0?0:index;
     index = index > self.contentView.subviews.count?self.contentView.subviews.count:index;
-    if (![scrollView isKindOfClass:[UIScrollView class]]) return NO;
-    // 添加滚动视图到指定数组
-    [self.scrollerViews insertObject:scrollView atIndex:index];
-    // 创建观察者
-    YULinkageItemObserver *observer = [[YULinkageItemObserver alloc] init];
-    // 添加代理
-    observer.yu_delegate = self.yu_delegate;
-    // 观察者添加到指定的数组
-    [self.observers insertObject:observer atIndex:index];
-    // 观察contentOffset
-    [scrollView addObserver:observer forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    // 添加observer
+    BOOL result = [self addObserverWithScrollViews:@[scrollView] index:index];
+    // 如果结果失败
+    if (!result) return NO;
     /// 添加item视图
     [self insertLinkageItemView:scrollView atIndex:index];
     return YES;
@@ -113,21 +111,44 @@
     // 防止越界
     index = index < 0?0:index;
     index = index > self.contentView.subviews.count?self.contentView.subviews.count:index;
-    if (![vc respondsToSelector:@selector(provideScrollViewForResponse)]) return NO;
-    UIScrollView *scrollView = [vc provideScrollViewForResponse];
-    if (![scrollView isKindOfClass:[UIScrollView class]]) return NO;
-    // 添加滚动视图到指定数组
-    [self.scrollerViews insertObject:scrollView atIndex:index];
-    // 创建观察者
-    YULinkageItemObserver *observer = [[YULinkageItemObserver alloc] init];
-    // 添加代理
-    observer.yu_delegate = self.yu_delegate;
-    // 观察者添加到指定的数组
-    [self.observers insertObject:observer atIndex:index];
-    // 观察contentOffset
-    [scrollView addObserver:observer forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    /// 添加item视图 添加vc的view
+    // 获取 scrollViews
+    NSArray *scrollViews = nil;
+    if ([vc respondsToSelector:@selector(provideScrollViewsForLinkage)]) {
+        scrollViews = [vc provideScrollViewsForLinkage];
+    }else if ([vc respondsToSelector:@selector(provideScrollViewForResponse)]){
+        UIScrollView *scrollView = [vc provideScrollViewForResponse];
+        if (!scrollView) return NO;
+        scrollViews = @[scrollView];
+    }else{
+        return NO;
+    }
+    // 添加observer
+    BOOL result = [self addObserverWithScrollViews:scrollViews index:index];
+    // 如果结果失败
+    if (!result) return NO;
+    // 添加item视图 添加vc的view
     [self insertLinkageItemView:vc.view atIndex:index];
+    return YES;
+}
+
+/// 添加观察者
+- (BOOL)addObserverWithScrollViews:(NSArray<UIScrollView *> *)scrollViews index:(NSInteger)index{
+    NSMutableArray<YULinkageItemObserver *> *item = [NSMutableArray array];
+    for (UIScrollView *scrollView in scrollViews) {
+        // 检查是否是 UIScrollView 列表里面必须全部都是 UIScrollView 才能添加成功
+        if (![scrollView isKindOfClass:[UIScrollView class]]) return NO;
+        // 创建观察者
+        YULinkageItemObserver *observer = [[YULinkageItemObserver alloc] init];
+        // 添加绑定
+        observer.scrollView = scrollView;
+        // 添加代理
+        observer.yu_delegate = self.yu_delegate;
+        // 观察者添加到指定的数组
+        [item addObject:observer];
+        // 观察UIScrollView的contentOffset属性
+        [scrollView addObserver:observer forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    }
+    [self.items insertObject:item atIndex:index];
     return YES;
 }
 
@@ -166,13 +187,31 @@
     }
 }
 
+/// 移除观察者
+- (void)removeObserverAtIndex:(NSInteger)index{
+    [self removeObserverAtItem:self.items[index]];
+    [self.items removeObjectAtIndex:index];
+}
+
+- (void)removeObserverAtItem:(NSArray<YULinkageItemObserver *> *)item{
+    for (YULinkageItemObserver *observer in item) {
+        // 拿到scrollView
+        UIScrollView *scrollView = observer.scrollView;
+        // 移除观察者
+        [scrollView removeObserver:observer forKeyPath:@"contentOffset"];
+    }
+}
+
 /// 删除scrollView
 - (BOOL)removeSubviewAtIndex:(NSInteger)index{
+    // 防止越界
     index = [self checkIndexOutOfBounds:index];
     NSUInteger count = self.contentView.subviews.count;
+    // 检查是否还有数据
     if (0 == count) return NO;
-    UIScrollView *scrollView = self.scrollerViews[index];
-    YULinkageItemObserver *observer = self.observers[index];
+    // 移除观察者
+    [self removeObserverAtIndex:index];
+    // 获得view
     UIView *subview = self.contentView.subviews[index];
     // 获取上一个和下一个的视图
     UIScrollView *previou_sbuview = nil;
@@ -183,12 +222,6 @@
     if (index < count - 1) {
         next_subview = self.contentView.subviews[index + 1];
     }
-    // 移除观察者
-    [scrollView removeObserver:observer forKeyPath:@"contentOffset"];
-    // 从数组中删除观察者
-    [self.observers removeObject:observer];
-    // 删除保存的scrollView
-    [self.scrollerViews removeObject:scrollView];
     // 移除视图
     [subview removeFromSuperview];
     // 重新调整约束
@@ -222,10 +255,12 @@
 /// 恢复子视图的滑动
 - (BOOL)restoreSubViewsScroll {
     /// 遍历所有的observer
-    for (YULinkageItemObserver *observer in self.observers) {
-        [observer restoreScroll];
-    }
-    if (self.observers.count) {
+    [self.items enumerateObjectsUsingBlock:^(NSMutableArray<YULinkageItemObserver *> * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        [item enumerateObjectsUsingBlock:^(YULinkageItemObserver * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj restoreScroll];
+        }];
+    }];
+    if (self.items.count) {
         return YES;
     }else{
         return NO;
@@ -234,13 +269,20 @@
 
 /// 所以的子视图都不可以滑动了
 - (void)subViewsNotScrollable{
-    [self.observers setValue:@NO forKeyPath:@"isCanScroll"];
+    [self.items setValue:@NO forKeyPath:@"isCanScroll"];
 }
 
 /// 子视图与root视图的状态同步
-- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move{
-    if (!self.observers.count) return YULinkageTouchMoveFinish;
-    YULinkageItemObserver *observer = self.observers[self.currentIndex];
+- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move scrollView:(UIScrollView *)aScrollView{
+    if (!self.items.count) return YULinkageTouchMoveFinish;
+    if (!aScrollView) return YULinkageTouchMoveFinish;
+    YULinkageItemObserver *observer = nil;
+    NSMutableArray<YULinkageItemObserver *> *item = self.items[self.currentIndex];
+    for (YULinkageItemObserver *obj in item) {
+        if (obj.scrollView == aScrollView) {
+            observer = obj;
+        }
+    }
     return [observer syncTouchMove:touch_move];
 }
 
@@ -264,26 +306,17 @@
 }
 
 #pragma mark 懒加载
-- (NSMutableArray<UIScrollView *> *)scrollerViews{
-    if (!_scrollerViews) {
-        _scrollerViews = [NSMutableArray array];
+- (NSMutableArray<NSMutableArray<YULinkageItemObserver *> *> *)items{
+    if (!_items) {
+        _items = [NSMutableArray array];
     }
-    return _scrollerViews;
-}
-
-- (NSMutableArray<YULinkageItemObserver *> *)observers{
-    if (!_observers) {
-        _observers = [NSMutableArray array];
-    }
-    return _observers;
+    return _items;
 }
 
 - (void)dealloc{
     // 移除所有的观察者
-    for (int i = 0; i < self.observers.count; i++) {
-        UIScrollView *scrollView = self.scrollerViews[i];
-        YULinkageItemObserver *observer = self.observers[i];
-        [scrollView removeObserver:observer forKeyPath:@"contentOffset"];
+    for (NSMutableArray<YULinkageItemObserver *> *item in self.items) {
+        [self removeObserverAtItem:item];
     }
 }
 

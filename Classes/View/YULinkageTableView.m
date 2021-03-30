@@ -26,7 +26,7 @@
 /// 注释:001
 @property (nonatomic, assign) BOOL isInsideFirstTrigger;
 /// 相应的子视图
-@property (nonatomic, weak) UIScrollView *response_subview;
+@property (nonatomic, weak) UIScrollView *response_view;
 
 @end
 
@@ -117,10 +117,12 @@
     [self.linkage_view subViewsNotScrollable];
 }
 /// 同步自视图的滑动状态 这里是子ScrollView的回调
-- (void)returnTouchMove:(YULinkageTouchMove)touch_move{
+- (void)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView{
     // 注释:001
     self.isInsideFirstTrigger = YES;
-    self.touch_move = touch_move;
+    if (linkageScrollView == self.response_view) {
+        self.touch_move = touch_move;
+    }
 }
 
 #pragma YULinkageView offsetX滑动返回
@@ -173,7 +175,7 @@
         return;
     }
     // 这里只拖动了 header 那么什么也不执行
-    if (!self.response_subview) return;
+    if (!self.response_view) return;
     switch (self.touch_move) {
         case YULinkageTouchMoveFinish:break;
         case YULinkageTouchMoveNone:
@@ -189,7 +191,7 @@
             }
             if (self.touch_move != touch_move) {// 不用多次同步
                 // 同步子视图的滑动状态
-                self.touch_move = [self.linkage_view syncTouchMove:touch_move];
+                self.touch_move = [self.linkage_view syncTouchMove:touch_move scrollView:self.response_view];
             }
             break;
         }
@@ -199,12 +201,6 @@
         }
     }
     [self didScrollForOffsetY:scrollView.contentOffset.y];
-}
-
-/// 手指离开
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    // 注释:001
-    self.isInsideFirstTrigger = NO;
 }
 
 #pragma mark 实现方法 方法转发
@@ -294,15 +290,17 @@
 }
 /// 是否与其他手势识别器同时识别
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    // 注释:001
+    self.isInsideFirstTrigger = NO;
     UIScrollView *aScrollView = (UIScrollView *)otherGestureRecognizer.view;
     if (![aScrollView isKindOfClass:[UIScrollView class]]) return NO;
     if ([aScrollView.class.description isEqualToString:@"UITableViewWrapperView"]) return NO;
     BOOL isCanLinkage = NO;
     isCanLinkage = [self.linkage_view canLinkageWithSrollView:aScrollView];
     if (isCanLinkage) {
-        self.response_subview = aScrollView;
+        self.response_view = aScrollView;
     }else{
-        self.response_subview = nil;
+        self.response_view = nil;
     }
     return isCanLinkage;
 }

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface YULinkageItemObserver : NSObject
 
 @property (nonatomic, weak) id <YULinkageViewDelegate>yu_delegate;
+/// scrollView
+@property (nonatomic, weak) UIScrollView *scrollView;
 /// 恢复滑动
 - (void)restoreScroll;
 /// root视图与子视图同步滑动状态

@@ -12,8 +12,6 @@
 
 /// 自己视图是否可以滑动
 @property (nonatomic, assign) BOOL isCanScroll;
-/// scrollView
-@property (nonatomic, weak) UIScrollView *scrollView;
 /// 上次滑动的位置
 @property (nonatomic, assign) float previou_offset_y;
 /// 当前滑动的类型
@@ -24,7 +22,7 @@
 @implementation YULinkageItemObserver
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
-    self.scrollView = (UIScrollView *)object;
+    if (self.scrollView != object) return;
     NSValue *new_value = change[@"new"];
     CGFloat new_y = [new_value CGPointValue].y;
     NSValue *old_value = change[@"old"];
@@ -35,6 +33,10 @@
         if (new_y <= -self.scrollView.contentInset.top) {
             // 变为不可滑动状态
             [self notScrollable];
+            // 通知外层
+            if ([_yu_delegate respondsToSelector:@selector(restoreRootViewScroll)]) {
+                [_yu_delegate restoreRootViewScroll];
+            }
         }
         return;
     }
@@ -46,7 +48,7 @@
 - (void)touchMoveForNewY:(float)new_y oldY:(float)old_y{
     switch (self.touch_move) {
         case YULinkageTouchMoveFinish:{
-            [self.scrollView setContentOffset:CGPointMake(0, -self.scrollView.contentInset.top)];
+            [self notScrollable];
             break;
         }
         case YULinkageTouchMoveNone:{
@@ -85,9 +87,8 @@
 - (void)moveDownForNewY:(float)new_y oldY:(float)old_y{
     if (new_y <= -self.scrollView.contentInset.top) {
         self.touch_move = YULinkageTouchMoveFinish;
-        [self.scrollView setContentOffset:CGPointZero];
         [self syncRootViewTouchMove];
-        self.previou_offset_y = -self.scrollView.contentInset.top;
+        [self touchMoveForNewY:new_y oldY:old_y];
         return;
     }
     self.touch_move = [self getTouchMoveForNewY:new_y oldY:old_y];
@@ -100,8 +101,8 @@
 
 /// 同步外部根视图的的TouchMove状态
 - (void)syncRootViewTouchMove{
-    if ([self.yu_delegate respondsToSelector:@selector(returnTouchMove:)]) {
-        [self.yu_delegate returnTouchMove:self.touch_move];
+    if ([self.yu_delegate respondsToSelector:@selector(returnTouchMove:linkageScrollView:)]) {
+        [self.yu_delegate returnTouchMove:self.touch_move linkageScrollView:self.scrollView];
     }
 }
 
@@ -129,9 +130,6 @@
     [self.scrollView setContentOffset:CGPointMake(0, -self.scrollView.contentInset.top)];
     self.previou_offset_y = -self.scrollView.contentInset.top;
     self.scrollView.showsVerticalScrollIndicator = NO;
-    if ([_yu_delegate respondsToSelector:@selector(restoreRootViewScroll)]) {
-        [_yu_delegate restoreRootViewScroll];
-    }
 }
 
 - (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move{
@@ -141,10 +139,10 @@
 - (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move offsetY:(CGFloat)offsetY{
     if (offsetY > -self.scrollView.contentInset.top && !self.isCanScroll) {
         self.touch_move = touch_move;
-        return touch_move;
     }else{
-        return YULinkageTouchMoveFinish;
+        self.touch_move = YULinkageTouchMoveFinish;
     }
+    return self.touch_move;
 }
 
 @end

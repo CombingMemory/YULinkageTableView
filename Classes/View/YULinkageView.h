@@ -10,12 +10,14 @@
 #import "YULinkageTableView.h"
 #import "YULinkageProtocol.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol YULinkageViewDelegate <NSObject>
 
 @required
 - (void)restoreRootViewScroll;
 
-- (void)returnTouchMove:(YULinkageTouchMove)touch_move;
+- (void)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView;
 
 - (void)didScrollForOffsetX:(float)offsetX;
 
@@ -53,6 +55,8 @@
 /// 所以子视图暂停滑动
 - (void)subViewsNotScrollable;
 /// root视图与子视图同步滑动状态
-- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move;
+- (YULinkageTouchMove)syncTouchMove:(YULinkageTouchMove)touch_move scrollView:(nonnull UIScrollView *)aScrollView;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -9,6 +9,7 @@
 - segmented高度自定义，直接传入原本已自定义好的segmented
 - 支持adjustedContentInset
 - 支持iOS 11以下的版本
+- 支持同一page页多个scrollView的联动
 
 #### API
 
@@ -56,6 +57,9 @@
 
 #### 版本
 
+**v 1.3.0**
+- addScrollViewWithVC: 支持联动 self.view中的多个 scrollView
+
 **v 1.2.0**
 - 修复了插入新视图，约束错误的问题
 - 适配了子视图的contentInset.top属性
@@ -69,4 +73,4 @@
 
 #### 后续功能
 
-- addScrollViewWithVC 时候将会支持VC中多个ScrollView的联动效果（例如一个VC中两列TableView效果）。目前仅支持VC中的单个ScrollView的联动效果。
+- 暂无新的需求

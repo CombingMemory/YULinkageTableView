@@ -22,8 +22,9 @@
 #import <UIKit/UIKit.h>
 #import "YULinkageProtocol.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface YULinkageTableView : UITableView
-//TODO:需要修改的是 currentIndex 因为当用户从原始的0改为6的时候。block会返回 0，1，2，3，4，5，6。应该是不返回
 
 /// 当前的index
 @property (nonatomic, assign) int currentIndex;
@@ -66,3 +67,5 @@
 - (BOOL)removeSubviewAtIndex:(NSInteger)index;
 
 @end
+
+NS_ASSUME_NONNULL_END
