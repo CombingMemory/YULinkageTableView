@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "YULinkageTableView"
-  spec.version      = "1.3.0"
+  spec.version      = "1.3.1"
   spec.summary      = "联动TableView 多tableView共用同一header"
 
   # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   spec.description  = <<-DESC
-        代码0入侵，只需要加入试图就可以，不需要任何接入系统代理或者继承自某父类，支持vc.view的方式。vc需要返回指定响应的ScrollView
+        代码0入侵，只需要加入scrollView就可以，不需要任何接入系统代理或者继承自某父类，支持vc.view的方式。vc需要返回指定响应的scrollView
                    DESC
 
   spec.homepage     = "https://github.com/CombingMemory/YULinkageTableView"

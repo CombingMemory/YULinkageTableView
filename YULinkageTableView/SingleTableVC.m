@@ -44,6 +44,7 @@
     if (!_tableView) {
         _tableView = [[TableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStylePlain];
         _tableView.contentInset = UIEdgeInsetsMake(100, 0, 0, 0);
+        _tableView.tag = 911;
     }
     return _tableView;
 }
@@ -53,6 +54,7 @@
         _tableView2 = [[TableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStylePlain];
         _tableView2.backgroundColor = [UIColor grayColor];
         _tableView2.contentInset = UIEdgeInsetsMake(70, 0, 0, 0);
+        _tableView2.tag = 110;
     }
     return _tableView2;
 }

@@ -14,6 +14,8 @@
 @property (nonatomic, assign) BOOL isCanScroll;
 /// 上次滑动的位置
 @property (nonatomic, assign) float previou_offset_y;
+
+@property (nonatomic, assign) BOOL isAssigned;
 /// 当前滑动的类型
 @property (nonatomic, assign) YULinkageTouchMove touch_move;
 
@@ -31,11 +33,16 @@
     // 判断是否到达了顶部
     if (self.isCanScroll) {
         if (new_y <= -self.scrollView.contentInset.top) {
-            // 变为不可滑动状态
             [self notScrollable];
+            // 检查是否通知成功
+            BOOL result = NO;
             // 通知外层
-            if ([_yu_delegate respondsToSelector:@selector(restoreRootViewScroll)]) {
-                [_yu_delegate restoreRootViewScroll];
+            if ([_yu_delegate respondsToSelector:@selector(restoreRootViewScrollForLinkageScrollView:)]) {
+                result = [_yu_delegate restoreRootViewScrollForLinkageScrollView:self.scrollView];
+            }
+            if (result) {
+                // 变为不可滑动状态
+                self.isCanScroll = NO;
             }
         }
         return;
@@ -77,7 +84,8 @@
 
 /// 向上滑动执行的方法 moveUp
 - (void)moveUpForNewY:(float)new_y oldY:(float)old_y{
-    if (self.previou_offset_y <= -self.scrollView.contentInset.top) {
+    if (!self.isAssigned) {
+        self.isAssigned = YES;
         self.previou_offset_y = old_y;
     }
     [self.scrollView setContentOffset:CGPointMake(0, self.previou_offset_y)];
@@ -85,6 +93,8 @@
 
 /// 向下滑动执行的方法 moveDown
 - (void)moveDownForNewY:(float)new_y oldY:(float)old_y{
+    self.isAssigned = YES;
+    self.previou_offset_y = new_y;
     if (new_y <= -self.scrollView.contentInset.top) {
         self.touch_move = YULinkageTouchMoveFinish;
         [self syncRootViewTouchMove];
@@ -96,7 +106,6 @@
         [self.scrollView setContentOffset:CGPointMake(0, old_y)];
         [self syncRootViewTouchMove];
     }
-    self.previou_offset_y = new_y;
 }
 
 /// 同步外部根视图的的TouchMove状态
@@ -116,18 +125,17 @@
     }
 }
 
-/// 恢复滑动
+/// 恢复滑动 --- 总视图通知过来的
 - (void)restoreScroll{
     self.isCanScroll = YES;
-    self.previou_offset_y = -self.scrollView.contentInset.top;
     self.touch_move = YULinkageTouchMoveNone;
     self.scrollView.showsVerticalScrollIndicator = YES;
 }
 
 ///  自己滑动到了顶部 自己不可滑动了
 - (void)notScrollable{
-    self.isCanScroll = NO;
     [self.scrollView setContentOffset:CGPointMake(0, -self.scrollView.contentInset.top)];
+    self.isAssigned = NO;
     self.previou_offset_y = -self.scrollView.contentInset.top;
     self.scrollView.showsVerticalScrollIndicator = NO;
 }

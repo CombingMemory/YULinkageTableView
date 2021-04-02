@@ -112,17 +112,22 @@
 }
 #pragma mark LinkageView的代理
 /// 其中一个滑动到顶部了 根视图恢复滑动  同时通知所有的子试图不可以滑动
-- (void)restoreRootViewScroll{
-    self.isCanScroll = YES;
-    [self.linkage_view subViewsNotScrollable];
+- (BOOL)restoreRootViewScrollForLinkageScrollView:(UIScrollView *)linkageScrollView{
+    if (linkageScrollView == self.response_view) {
+        self.isCanScroll = YES;
+        [self.linkage_view subViewsNotScrollable];
+        return YES;
+    }else{
+        return NO;
+    }
 }
 /// 同步自视图的滑动状态 这里是子ScrollView的回调
 - (void)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView{
+    if (linkageScrollView != self.response_view) return;
     // 注释:001
     self.isInsideFirstTrigger = YES;
-    if (linkageScrollView == self.response_view) {
-        self.touch_move = touch_move;
-    }
+    self.touch_move = touch_move;
+    
 }
 
 #pragma YULinkageView offsetX滑动返回
@@ -181,13 +186,13 @@
         case YULinkageTouchMoveNone:
         case YULinkageTouchMoveUp:{
             float differ = offset_y - self.previou_offset_y;
-            YULinkageTouchMove touch_move = YULinkageTouchMoveUp;
-            if (differ > 0) {
-                touch_move = YULinkageTouchMoveUp;
-                self.previou_offset_y = offset_y;
-            }else{
+            YULinkageTouchMove touch_move = YULinkageTouchMoveDown;
+            if (differ < 0) {
                 touch_move = YULinkageTouchMoveDown;
                 scrollView.contentOffset = CGPointMake(0, self.previou_offset_y);
+            }else{
+                touch_move = YULinkageTouchMoveUp;
+                self.previou_offset_y = offset_y;
             }
             if (self.touch_move != touch_move) {// 不用多次同步
                 // 同步子视图的滑动状态

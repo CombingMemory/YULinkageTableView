@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol YULinkageViewDelegate <NSObject>
 
 @required
-- (void)restoreRootViewScroll;
+- (BOOL)restoreRootViewScrollForLinkageScrollView:(UIScrollView *)linkageScrollView;
 
 - (void)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView;
 

@@ -2,9 +2,9 @@
 
 #### 特性
 - 使用方便、代码0入侵
-- 使用时添加需要联动的ScrollView即可
-- 不用接入ScrollView任何代理，设置任何属性或继承自某父类
-- 支持添加VC中的view，与vc中的ScrollView进行联动
+- 使用时添加需要联动的scrollView即可
+- 不需要设置scrollView任何代理，设置任何属性或继承自某父类，不用重写方法
+- 支持添加VC中的view，与vc.view中的scrollView进行联动
 - 支持插入、删除单个 联动page页
 - segmented高度自定义，直接传入原本已自定义好的segmented
 - 支持adjustedContentInset
@@ -57,6 +57,9 @@
 
 #### 版本
 
+**v 1.3.1**
+- 修复了self.view中多个scrollView联动时，其中一个滑动到顶部，联动另一个也滑动到顶部的问题
+
 **v 1.3.0**
 - addScrollViewWithVC: 支持联动 self.view中的多个 scrollView
 
@@ -73,4 +76,4 @@
 
 #### 后续功能
 
-- 暂无新的需求
+- 准备开发swift版本
