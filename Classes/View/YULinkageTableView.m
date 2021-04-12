@@ -102,6 +102,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"YULinkageTableViewCell" forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.backgroundColor = [UIColor clearColor];
     // 添加视图
     [cell.contentView addSubview:self.linkage_view];
     // 添加约束
@@ -127,7 +128,6 @@
     // 注释:001
     self.isInsideFirstTrigger = YES;
     self.touch_move = touch_move;
-    
 }
 
 #pragma YULinkageView offsetX滑动返回
@@ -206,6 +206,11 @@
         }
     }
     [self didScrollForOffsetY:scrollView.contentOffset.y];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    // 防止代码改变offset从而触发了联动
+    self.response_view = nil;
 }
 
 #pragma mark 实现方法 方法转发

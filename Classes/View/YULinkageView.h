@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-@interface YULinkageView : UIScrollView
+@interface YULinkageView : UIView
 
 /// 当前的index
 @property (nonatomic, assign) int currentIndex;
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 代理
 @property (nonatomic, weak, nullable) id <YULinkageViewDelegate> yu_delegate;
 
-
+@property (nonatomic, readonly) CGPoint contentOffset;
 
 /// 设置index
 - (void)setCurrentIndex:(int)currentIndex animated:(BOOL)animated;

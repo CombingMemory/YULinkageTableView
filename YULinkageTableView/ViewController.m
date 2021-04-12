@@ -102,6 +102,9 @@
 //        NSLog(@"x:%f---y:%f",offsetX,offsetY);
     };
     
+    
+    self.linkage_tableView.currentIndex = 1;
+    
 }
 
 - (void)deleteScrollView{

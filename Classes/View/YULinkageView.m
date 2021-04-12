@@ -12,6 +12,8 @@
 
 @interface YULinkageView()<UIScrollViewDelegate>
 
+@property (nonatomic, strong) UIScrollView *scrollView;
+
 @property (nonatomic, strong) UIView *contentView;
 
 @property (nonatomic, strong) NSMutableArray<NSMutableArray<YULinkageItemObserver *> *> *items;
@@ -27,17 +29,34 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        self.pagingEnabled = YES;
-        self.directionalLockEnabled = YES;
-        self.delegate = self;
-        self.contentView = [[UIView alloc] init];
-        [self addSubview:self.contentView];
-        [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(@0);
-            make.height.equalTo(self);
-        }];
+        [self _init];
     }
     return self;
+}
+
+- (void)_init{
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.directionalLockEnabled = YES;
+    self.scrollView.delegate = self;
+    [self addSubview:self.scrollView];
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
+    }];
+    
+    
+    
+    self.contentView = [[UIView alloc] init];
+    [self.scrollView addSubview:self.contentView];
+    [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(@0);
+        make.height.equalTo(self.scrollView);
+    }];
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    [self setContentOffsetWithCurrentIndex:self.currentIndex animated:NO];
 }
 
 /// 设置下标
@@ -49,15 +68,22 @@
     currentIndex = (int)[self checkIndexOutOfBounds:currentIndex];
     if (_currentIndex == currentIndex) return;
     _currentIndex = currentIndex;
+    if (self.frame.size.width) {
+        [self setContentOffsetWithCurrentIndex:currentIndex animated:animated];
+    }
+}
+
+- (void)setContentOffsetWithCurrentIndex:(int)currentIndex animated:(BOOL)animated{
     // 注释：002
     self.isOffsetAnimation = animated;
-    [self setContentOffset:CGPointMake(self.frame.size.width * currentIndex, 0) animated:animated];
+    [self.scrollView setContentOffset:CGPointMake(self.scrollView.frame.size.width * currentIndex, 0) animated:animated];
     // 注释：002
     if (animated) {
         [NSRunLoop cancelPreviousPerformRequestsWithTarget:self selector:@selector(offsetAnimationAction) object:nil];
         [self performSelector:@selector(offsetAnimationAction) withObject:nil afterDelay:0.3 inModes:@[NSRunLoopCommonModes]];
     }
 }
+
 /// offset动画执行  注释：002
 - (void)offsetAnimationAction{
     self.isOffsetAnimation = NO;
@@ -65,7 +91,7 @@
 
 - (NSInteger)checkIndexOutOfBounds:(NSInteger)index{
     // 防止越界
-    if (index < 0) {
+    if (index < 0 || 0 == self.contentView.subviews.count) {
         return 0;
     }
     if (index > self.contentView.subviews.count - 1) {
@@ -305,7 +331,11 @@
     }
 }
 
-#pragma mark 懒加载
+#pragma mark get
+- (CGPoint)contentOffset{
+    return self.scrollView.contentOffset;
+}
+
 - (NSMutableArray<NSMutableArray<YULinkageItemObserver *> *> *)items{
     if (!_items) {
         _items = [NSMutableArray array];
