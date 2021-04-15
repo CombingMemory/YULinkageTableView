@@ -43,7 +43,9 @@
 - (TableView *)tableView{
     if (!_tableView) {
         _tableView = [[TableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStylePlain];
-        _tableView.contentInset = UIEdgeInsetsMake(100, 0, 0, 0);
+        UIScrollView *scroll_view = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 300)];
+        _tableView.tableHeaderView = scroll_view;
+        scroll_view.backgroundColor = [UIColor redColor];
         _tableView.tag = 911;
     }
     return _tableView;

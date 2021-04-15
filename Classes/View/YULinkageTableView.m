@@ -309,8 +309,6 @@
     isCanLinkage = [self.linkage_view canLinkageWithSrollView:aScrollView];
     if (isCanLinkage) {
         self.response_view = aScrollView;
-    }else{
-        self.response_view = nil;
     }
     return isCanLinkage;
 }
