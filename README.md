@@ -9,7 +9,7 @@
 - segmented高度自定义，直接传入原本已自定义好的segmented
 - 支持adjustedContentInset
 - 支持iOS 11以下的版本
-- 支持同一page页多个scrollView的联动
+- 支持单个page页中多个scrollView的联动
 
 #### API
 
@@ -26,7 +26,8 @@
 /// scrollView的自动调整高度。VC的属性automaticallyAdjustsScrollViewInsets为YES的情况下使用
 @property (nonatomic, assign) float adjustedTop API_DEPRECATED("VC的属性automaticallyAdjustsScrollViewInsets为YES的情况下使用",ios(7.0,11.0));
 
-
+/// 忽略的头部高度 默认:0
+@property (nonatomic, assign) float ignoreHeaderHeight;
 
 /// 设置segmented
 - (void)setSegmented:(nonnull UIView *)segmented;
@@ -47,6 +48,7 @@
 - (BOOL)addScrollViewWithVC:(nonnull UIViewController<YULinkageTableViewDelegate> *)vc;
 /// 根据VC插入scrollView
 - (BOOL)insertScrollViewWithVC:(nonnull UIViewController<YULinkageTableViewDelegate> *)vc atIndex:(NSInteger)index;
+
 
 
 
