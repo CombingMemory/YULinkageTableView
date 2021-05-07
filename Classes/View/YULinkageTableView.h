@@ -38,7 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// scrollView的自动调整高度。VC的属性automaticallyAdjustsScrollViewInsets为YES的情况下使用
 @property (nonatomic, assign) float adjustedTop API_DEPRECATED("VC的属性automaticallyAdjustsScrollViewInsets为YES的情况下使用",ios(7.0,11.0));
 
-
+/// 忽略的头部高度 默认:0
+@property (nonatomic, assign) float ignoreHeaderHeight;
 
 /// 设置segmented
 - (void)setSegmented:(nonnull UIView *)segmented;

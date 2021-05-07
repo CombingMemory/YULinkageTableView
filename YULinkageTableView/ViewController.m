@@ -46,6 +46,7 @@
         self.linkage_tableView.adjustedTop = 64;
     }
     
+    self.linkage_tableView.ignoreHeaderHeight = 0;
     
     
     

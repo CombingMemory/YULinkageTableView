@@ -307,6 +307,7 @@
     for (YULinkageItemObserver *obj in item) {
         if (obj.scrollView == aScrollView) {
             observer = obj;
+            break;
         }
     }
     return [observer syncTouchMove:touch_move];

@@ -91,6 +91,8 @@
     }else{
         cell_height -= self.adjustedTop;
     }
+    // 减去忽略头部高度
+    cell_height -= self.ignoreHeaderHeight;
     return cell_height;
 }
 
@@ -103,6 +105,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"YULinkageTableViewCell" forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor clearColor];
+    cell.contentView.backgroundColor = [UIColor clearColor];
     // 添加视图
     [cell.contentView addSubview:self.linkage_view];
     // 添加约束
@@ -164,6 +167,8 @@
     }else{
         cell_y -= self.adjustedTop;
     }
+    // 减去忽略头部高度
+    cell_y -= self.ignoreHeaderHeight;
     // 判断是否不可滑动
     if (!self.isCanScroll) {
         scrollView.contentOffset = CGPointMake(0, cell_y);
@@ -213,7 +218,7 @@
     self.response_view = nil;
 }
 
-#pragma mark 实现方法 方法转发
+//MARK: 实现方法 方法转发
 - (void)setCurrentIndexChanged:(void (^)(int))currentIndexChanged{
     self.linkage_view.currentIndexChanged = currentIndexChanged;
 }

@@ -181,7 +181,7 @@
 		CD4C189825A598BE006A3240 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1250;
 				TargetAttributes = {
 					CD4C189F25A598BE006A3240 = {
 						CreatedOnToolsVersion = 12.3;
