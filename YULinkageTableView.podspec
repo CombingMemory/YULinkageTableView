@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "YULinkageTableView"
-  spec.version      = "1.3.4"
+  spec.version      = "1.3.5"
   spec.summary      = "联动TableView 多tableView共用同一header"
 
   # This description is used to generate tags and improve search results.

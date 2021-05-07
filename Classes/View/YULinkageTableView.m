@@ -255,6 +255,14 @@
     return [super dataSource];
 }
 
+- (void)setIgnoreHeaderHeight:(float)ignoreHeaderHeight{
+    if (_ignoreHeaderHeight == ignoreHeaderHeight) return;
+    _ignoreHeaderHeight = ignoreHeaderHeight;
+    if (!CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self reloadData];
+    }
+}
+
 /// 添加scrollView
 - (BOOL)addScrollView:(nonnull UIScrollView *)scrollView{
     return [self.linkage_view addScrollView:scrollView];

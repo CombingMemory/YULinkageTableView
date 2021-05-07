@@ -59,6 +59,9 @@
 
 #### 版本
 
+**v 1.3.5**
+- 修复动态修改ignoreHeaderHeight属性是，联动视图高度不正确的问题
+
 **v 1.3.4**
 - 添加属性ignoreHeaderHeight,被忽略的头部视图高度
 
