@@ -15,9 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol YULinkageViewDelegate <NSObject>
 
 @required
+/// 通知根视图可以滚动
 - (BOOL)restoreRootViewScrollForLinkageScrollView:(UIScrollView *)linkageScrollView;
 
-- (void)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView;
+- (BOOL)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView;
 
 - (void)didScrollForOffsetX:(float)offsetX;
 

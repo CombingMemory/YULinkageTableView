@@ -126,11 +126,15 @@
     }
 }
 /// 同步自视图的滑动状态 这里是子ScrollView的回调
-- (void)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView{
-    if (linkageScrollView != self.response_view) return;
-    // 注释:001
-    self.isInsideFirstTrigger = YES;
-    self.touch_move = touch_move;
+- (BOOL)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView{
+    if (linkageScrollView == self.response_view){
+        // 注释:001
+        self.isInsideFirstTrigger = YES;
+        self.touch_move = touch_move;
+        return YES;
+    }else{
+        return NO;
+    }
 }
 
 #pragma YULinkageView offsetX滑动返回
@@ -169,6 +173,13 @@
     }
     // 减去忽略头部高度
     cell_y -= self.ignoreHeaderHeight;
+    
+    // 这里只拖动了 header
+    if (!self.response_view && !self.isCanScroll) {
+        self.isCanScroll = YES;
+        [self.linkage_view subViewsNotScrollable];
+    }
+
     // 判断是否不可滑动
     if (!self.isCanScroll) {
         scrollView.contentOffset = CGPointMake(0, cell_y);
@@ -311,6 +322,13 @@
         [self reloadData];
     }
 }
+
+/// 手势开始触摸时
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    self.response_view = nil;
+    return YES;
+}
+
 /// 是否与其他手势识别器同时识别
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     // 注释:001

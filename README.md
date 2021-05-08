@@ -59,6 +59,10 @@
 
 #### 版本
 
+**v 1.4.0**
+- 支持了可拖动segmented将headerView下拉下来，不用等到子scrollView滑动到顶部的时候才能对header进行滑动
+- 修复了部分情况下代码移动子视图造成联动错误的问题
+
 **v 1.3.5**
 - 修复动态修改ignoreHeaderHeight属性是，联动视图高度不正确的问题
 

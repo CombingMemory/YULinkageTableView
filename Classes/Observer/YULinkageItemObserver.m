@@ -14,7 +14,7 @@
 @property (nonatomic, assign) BOOL isCanScroll;
 /// 上次滑动的位置
 @property (nonatomic, assign) float previou_offset_y;
-
+/// 上次滑动位置的值已赋值
 @property (nonatomic, assign) BOOL isAssigned;
 /// 当前滑动的类型
 @property (nonatomic, assign) YULinkageTouchMove touch_move;
@@ -33,7 +33,6 @@
     // 判断是否到达了顶部
     if (self.isCanScroll) {
         if (new_y <= -self.scrollView.contentInset.top) {
-            [self notScrollable];
             // 检查是否通知成功
             BOOL result = NO;
             // 通知外层
@@ -44,6 +43,7 @@
                 // 变为不可滑动状态
                 self.isCanScroll = NO;
             }
+            [self notScrollable];
         }
         return;
     }
@@ -84,11 +84,15 @@
 
 /// 向上滑动执行的方法 moveUp
 - (void)moveUpForNewY:(float)new_y oldY:(float)old_y{
-    if (!self.isAssigned) {
-        self.isAssigned = YES;
-        self.previou_offset_y = old_y;
+    if ([self syncRootViewTouchMove]) {// 判断是否同步成功了
+        if (!self.isAssigned) {
+            self.isAssigned = YES;
+            self.previou_offset_y = old_y;
+        }
+        [self.scrollView setContentOffset:CGPointMake(0, self.previou_offset_y)];
+    }else{
+        self.isAssigned = NO;
     }
-    [self.scrollView setContentOffset:CGPointMake(0, self.previou_offset_y)];
 }
 
 /// 向下滑动执行的方法 moveDown
@@ -102,17 +106,19 @@
         return;
     }
     self.touch_move = [self getTouchMoveForNewY:new_y oldY:old_y];
-    if (self.touch_move == YULinkageTouchMoveUp) {
-        [self.scrollView setContentOffset:CGPointMake(0, old_y)];
-        [self syncRootViewTouchMove];
+    if (self.touch_move == YULinkageTouchMoveUp) {// 判断是否同步成功了
+        if ([self syncRootViewTouchMove]) {
+            [self.scrollView setContentOffset:CGPointMake(0, old_y)];
+        }
     }
 }
 
 /// 同步外部根视图的的TouchMove状态
-- (void)syncRootViewTouchMove{
+- (BOOL)syncRootViewTouchMove{
     if ([self.yu_delegate respondsToSelector:@selector(returnTouchMove:linkageScrollView:)]) {
-        [self.yu_delegate returnTouchMove:self.touch_move linkageScrollView:self.scrollView];
+        return [self.yu_delegate returnTouchMove:self.touch_move linkageScrollView:self.scrollView];
     }
+    return NO;
 }
 
 /// 判断touchMove的状态
