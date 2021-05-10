@@ -59,6 +59,9 @@
 
 #### 版本
 
+**v 1.4.1**
+- 修复拖动segmented拉动headerView的时候，联动的子视图未滑动的时候出现联动错误
+
 **v 1.4.0**
 - 支持了可拖动segmented将headerView下拉下来，不用等到子scrollView滑动到顶部的时候才能对header进行滑动
 - 修复了部分情况下代码移动子视图造成联动错误的问题

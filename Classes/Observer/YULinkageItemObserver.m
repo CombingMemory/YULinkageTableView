@@ -90,8 +90,6 @@
             self.previou_offset_y = old_y;
         }
         [self.scrollView setContentOffset:CGPointMake(0, self.previou_offset_y)];
-    }else{
-        self.isAssigned = NO;
     }
 }
 
@@ -157,6 +155,12 @@
         self.touch_move = YULinkageTouchMoveFinish;
     }
     return self.touch_move;
+}
+
+- (void)setIsCanScroll:(BOOL)isCanScroll{
+    if (_isCanScroll == isCanScroll) return;
+    _isCanScroll = isCanScroll;
+    if (!isCanScroll) self.isAssigned = NO;
 }
 
 @end
