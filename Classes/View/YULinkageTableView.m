@@ -23,8 +23,6 @@
 @property (nonatomic, assign) float previou_offset_y;
 
 @property (nonatomic, assign) YULinkageTouchMove touch_move;
-/// 注释:001
-@property (nonatomic, assign) BOOL isInsideFirstTrigger;
 /// 相应的子视图
 @property (nonatomic, weak) UIScrollView *response_view;
 
@@ -128,8 +126,6 @@
 /// 同步自视图的滑动状态 这里是子ScrollView的回调
 - (BOOL)returnTouchMove:(YULinkageTouchMove)touch_move linkageScrollView:(UIScrollView *)linkageScrollView{
     if (linkageScrollView == self.response_view){
-        // 注释:001
-        self.isInsideFirstTrigger = YES;
         self.touch_move = touch_move;
         return YES;
     }else{
@@ -153,13 +149,6 @@
 }
 
 #pragma mark scrollView的代理
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    self.previou_offset_y = scrollView.contentOffset.y;
-    // 注释:001
-    if (!self.isInsideFirstTrigger) {
-        self.touch_move = YULinkageTouchMoveNone;
-    }
-}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset_y = scrollView.contentOffset.y;
@@ -324,15 +313,15 @@
 }
 
 /// 手势开始触摸时
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
     self.response_view = nil;
+    self.previou_offset_y = self.contentOffset.y;
+    self.touch_move = YULinkageTouchMoveNone;
     return YES;
 }
 
 /// 是否与其他手势识别器同时识别
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    // 注释:001
-    self.isInsideFirstTrigger = NO;
     UIScrollView *aScrollView = (UIScrollView *)otherGestureRecognizer.view;
     if (![aScrollView isKindOfClass:[UIScrollView class]]) return NO;
     if ([aScrollView.class.description isEqualToString:@"UITableViewWrapperView"]) return NO;
