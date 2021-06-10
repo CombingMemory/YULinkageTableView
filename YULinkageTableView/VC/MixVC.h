@@ -1,8 +1,8 @@
 //
-//  SingleTableVC.h
+//  MixVC.h
 //  YULinkageTableView
 //
-//  Created by 捋忆 on 2021/1/7.
+//  Created by 捋忆 on 2021/6/10.
 //
 
 #import <UIKit/UIKit.h>
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SingleTableVC : UIViewController<YULinkageTableViewDelegate>
+@interface MixVC : UIViewController<YULinkageTableViewDelegate>
 
 @end
 
