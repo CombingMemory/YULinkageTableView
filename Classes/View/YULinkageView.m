@@ -163,6 +163,8 @@
     for (UIScrollView *scrollView in scrollViews) {
         // 检查是否是 UIScrollView 列表里面必须全部都是 UIScrollView 才能添加成功
         if (![scrollView isKindOfClass:[UIScrollView class]]) return NO;
+        // 修改scrollview属性 永远可以垂直滑动
+        scrollView.alwaysBounceVertical = YES;
         // 创建观察者
         YULinkageItemObserver *observer = [[YULinkageItemObserver alloc] init];
         // 添加绑定
