@@ -11,6 +11,16 @@
 - 支持iOS 11以下的版本
 - 支持单个page页中多个scrollView的联动
 
+#### 使用
+` pod 'YULinkageTableView' `
+
+https://github.com/CombingMemory/YULinkageTableView
+
+#### 效果展示
+![RPReplay_Final1624278837.gif](https://upload-images.jianshu.io/upload_images/991899-b6cdeb1ee28b46ce.gif?imageMogr2/auto-orient/strip)
+
+![RPReplay_Final1624278882.gif](https://upload-images.jianshu.io/upload_images/991899-298200bd7ddaf7fc.gif?imageMogr2/auto-orient/strip)
+
 #### API
 
 ```
