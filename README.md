@@ -107,8 +107,3 @@ https://github.com/CombingMemory/YULinkageTableView
 - 适配了adjustedContentInset
 - 适配了ios 11 以下的设备
 - 修复了ios 10 didScrollView回调顺序不确定的问题
-
-
-#### 后续功能
-
-- 准备开发swift版本
